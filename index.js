@@ -3,11 +3,14 @@ const bodyParser = require("body-parser");
 const env = require("dotenv");
 const mongoose = require("mongoose");
 const Movie = require("./models/movie.model");
+const movieRoutes = require("./routes/movie.routes");
 
 env.config();
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+movieRoutes(app);
 
 app.get("/home", (req, res) => {
   console.log("Hitting /home endpoint");
