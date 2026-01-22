@@ -1,8 +1,20 @@
 const Movie = require("../models/movie.model");
 
 const createMovie = async (data) => {
-  const movie = await Movie.create(data);
-  return movie;
+  try {
+    const movie = await Movie.create(data);
+    return movie;
+  } catch (err) {
+    if (err.name === "ValidationError") {
+      let err = {};
+      Object.keys(err.errors).forEach((key) => {
+        err[key] = err.errors[key].message;
+      });
+      return { err, code: 400 };
+    } else {
+      throw new err();
+    }
+  }
 };
 
 const getMovies = async (id) => {

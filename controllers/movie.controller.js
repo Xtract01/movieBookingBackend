@@ -7,8 +7,14 @@ const {
 
 const createMovie = async (req, res) => {
   try {
-    const movie = await movieService.createMovie(req.body);
-    successResponseBody.data = movie;
+    const response = await movieService.createMovie(req.body);
+    if (response.err) {
+      errorResponseBody.err = response.err;
+      errorResponseBody.message = "Validation failed";
+      errorResponseBody.code = response.code;
+      return res.status(response.code).json(errorResponseBody);
+    }
+    successResponseBody.data = response;
     successResponseBody.message = "Movie created successfully";
     return res.status(201).json(successResponseBody);
   } catch (err) {
