@@ -33,4 +33,24 @@ const deleteMovie = async (id) => {
   return response;
 };
 
-module.exports = { getMovies, createMovie, deleteMovie };
+const updateMovie = async (id, data) => {
+  try {
+    const movie = await Movie.findByIdAndUpdate(id, data, {
+      new: true,
+      runValidators: true,
+    });
+    return movie;
+  } catch (err) {
+    if (err.name === "ValidationError") {
+      let error = {};
+      Object.keys(err.errors).forEach((key) => {
+        error[key] = err.errors[key].message;
+      });
+      return { err: error, code: 400 };
+    } else {
+      throw err;
+    }
+  }
+};
+
+module.exports = { getMovies, createMovie, deleteMovie, updateMovie };

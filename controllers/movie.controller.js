@@ -48,5 +48,22 @@ const getMovie = async (req, res) => {
     return res.status(500).json(errorResponseBody);
   }
 };
+const updateMovie = async (req, res) => {
+  try {
+    const response = await movieService.updateMovie(req.params.id, req.body);
+    if (response.err) {
+      errorResponseBody.err = response.err;
+      errorResponseBody.message = "Validation failed";
+      return res.status(response.code).json(errorResponseBody);
+    }
+    successResponseBody.data = response;
+    successResponseBody.message = "Movie updated successfully";
+    return res.status(200).json(successResponseBody);
+  } catch (err) {
+    console.log("Error in updating movie:", err);
+    errorResponseBody.err = err.message;
+    return res.status(500).json(errorResponseBody);
+  }
+};
 
-module.exports = { createMovie, deleteMovie, getMovie };
+module.exports = { createMovie, deleteMovie, getMovie, updateMovie };
