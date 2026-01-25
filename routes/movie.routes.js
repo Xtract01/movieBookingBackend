@@ -11,5 +11,6 @@ const routes = (app) => {
   app.get("/mba/api/v1/movies/:id", movieController.getMovie);
   app.put("/mba/api/v1/movies/:id", movieController.updateMovie);
   app.patch("/mba/api/v1/movies/:id", movieController.updateMovie);
+  app.get("/mba/api/v1/movies", movieController.getMovies);
 };
 module.exports = routes;
