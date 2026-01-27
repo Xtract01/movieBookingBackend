@@ -29,8 +29,15 @@ const getMovies = async (id) => {
 };
 
 const deleteMovie = async (id) => {
-  const response = await Movie.findByIdAndDelete(id);
-  return response;
+  try {
+    const response = await Movie.findByIdAndDelete(id);
+    if (!response) {
+      return { err: "Movie not found", code: 404 };
+    }
+    return response;
+  } catch (err) {
+    throw err;
+  }
 };
 
 const updateMovie = async (id, data) => {
