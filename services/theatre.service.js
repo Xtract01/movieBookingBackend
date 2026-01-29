@@ -49,4 +49,32 @@ const getAllTheatres = async () => {
     throw err;
   }
 };
-module.exports = { createTheatre, getTheatre, deleteTheatre, getAllTheatres };
+
+const updateMoviesInTheatre = async (theatreId, movieId, insert) => {
+  const theatre = await Theatre.findById(theatreId);
+  if (!theatre) {
+    return { err: "Theatre not found", code: 404 };
+  }
+  if (insert) {
+    //add movies
+    movieId.forEach((id) => {
+      theatre.movies.push(id);
+    });
+  } else {
+    //remove movies
+    let savedMovieIds = theatre.movies;
+    movieId.forEach((id) => {
+      savedMovieIds = savedMovieIds.filter((smi) => smi == movieId);
+    });
+    theatre.movies = savedMovieIds;
+  }
+  await theatre.save();
+  return theatre;
+};
+module.exports = {
+  createTheatre,
+  getTheatre,
+  deleteTheatre,
+  getAllTheatres,
+  updateMoviesInTheatre,
+};

@@ -14,4 +14,24 @@ const validateTheatreRequest = async (req, res, next) => {
   }
   next();
 };
-module.exports = { validateTheatreRequest };
+
+const validateUpdateMovies = async (req, res, next) => {
+  if (!req.body.insert) {
+    errorResponseBody.message = "Insert field is required";
+    return res.status(400).json(errorResponseBody);
+  }
+  if (!req.body.movieId) {
+    errorResponseBody.message = "Movie ID(s) are required";
+    return res.status(400).json(errorResponseBody);
+  }
+  if (!(req.body.movieId instanceof Array)) {
+    errorResponseBody.message = "Movie IDs should be in an array";
+    return res.status(400).json(errorResponseBody);
+  }
+  if (req.body.movieId.length == 0) {
+    errorResponseBody.message = "At least one Movie ID is required";
+    return res.status(400).json(errorResponseBody);
+  }
+  next();
+};
+module.exports = { validateTheatreRequest, validateUpdateMovies };
