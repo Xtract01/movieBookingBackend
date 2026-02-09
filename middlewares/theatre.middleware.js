@@ -16,7 +16,7 @@ const validateTheatreRequest = async (req, res, next) => {
 };
 
 const validateUpdateMovies = async (req, res, next) => {
-  if (!req.body.insert) {
+  if (req.body.insert === undefined) {
     errorResponseBody.message = "Insert field is required";
     return res.status(400).json(errorResponseBody);
   }
