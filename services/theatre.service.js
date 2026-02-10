@@ -1,4 +1,5 @@
 const Theatre = require("../models/theatre.model");
+const Movie = require("../models/movie.model");
 
 const createTheatre = async (data) => {
   try {
@@ -53,6 +54,9 @@ const getAllTheatres = async (data) => {
     if (data && data.name) {
       query.name = data.name;
     }
+    if (data && data.movieId) {
+      query.movies = { $all: data.movieId };
+    }
     if (data && data.limit) {
       pagination.limit = data.limit;
     }
@@ -63,25 +67,26 @@ const getAllTheatres = async (data) => {
     const response = await Theatre.find(query, {}, pagination);
     return response;
   } catch (err) {
-    console.log(err);
     throw err;
   }
 };
 
 const updateMoviesInTheatre = async (theatreId, movieIds, insert) => {
   try {
+    let theatre;
     if (insert) {
-      await Theatre.updateOne(
+      theatre = await Theatre.findByIdAndUpdate(
         { _id: theatreId },
         { $addToSet: { movies: { $each: movieIds } } },
+        { new: true },
       );
     } else {
-      await Theatre.updateOne(
+      theatre = await Theatre.findByIdAndUpdate(
         { _id: theatreId },
         { $pull: { movies: { $in: movieIds } } },
+        { new: true },
       );
     }
-    const theatre = await Theatre.findById(theatreId);
     return theatre.populate("movies");
   } catch (err) {
     if (err.name === "TypeError") {
