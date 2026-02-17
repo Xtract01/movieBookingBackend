@@ -18,6 +18,10 @@ const routes = (app) => {
     "/mba/api/v1/theatres/:id/movies",
     theatreController.getMoviesInTheatre,
   );
+  app.get(
+    "/mba/api/v1/theatres/:theatreId/movies/:movieId",
+    theatreController.checkMovieInTheatre,
+  );
 };
 
 module.exports = routes;
