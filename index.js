@@ -5,12 +5,14 @@ const mongoose = require("mongoose");
 const Movie = require("./models/movie.model");
 const movieRoutes = require("./routes/movie.routes");
 const theatreRoutes = require("./routes/theatre.routes");
+const authRoutes = require("./routes/auth.routes");
 
 env.config();
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+authRoutes(app);
 movieRoutes(app);
 theatreRoutes(app);
 
