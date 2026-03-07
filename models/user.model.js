@@ -7,7 +7,6 @@ const userSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      unique: true,
     },
     email: {
       type: String,
@@ -51,12 +50,17 @@ const userSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function () {
   const user = this;
   const hash = await bcrypt.hash(user.password, 10);
   user.password = hash;
-  next();
 });
+
+userSchema.methods.isValidPassword = async function (password) {
+  const currentUser = this;
+  const compare = await bcrypt.compare(password, currentUser.password);
+  return compare;
+};
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;

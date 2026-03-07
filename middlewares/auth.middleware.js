@@ -13,6 +13,5 @@ const validateSignUpRequest = async (req, res, next) => {
     return res.status(400).json(errorResponseBody);
   }
   next();
-  n;
 };
 module.exports = { validateSignUpRequest };
