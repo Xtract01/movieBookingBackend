@@ -44,9 +44,31 @@ const signin = async (req, res) => {
       errorResponseBody.err = error.err;
       return res.status(error.code).json(errorResponseBody);
     }
+
+    errorResponseBody.err = error;
+    return res.status(500).json(errorResponseBody);
+  }
+};
+const resetPassword = async (req, res) => {
+  try {
+    const user = await userService.getUserById(req.user);
+    const isOldPasswordValid = await user.isValidPassword(req.body.oldPassword);
+    if (!isOldPasswordValid) {
+      throw { err: "Invalid old password", code: 403 };
+    }
+    user.password = req.body.newPassword;
+    await user.save();
+    successResponseBody.data = user;
+    successResponseBody.message = "Password reset successful";
+    return res.status(200).json(successResponseBody);
+  } catch (error) {
+    if (error.err) {
+      errorResponseBody.err = error.err;
+      return res.status(error.code).json(errorResponseBody);
+    }
     errorResponseBody.err = error;
     return res.status(500).json(errorResponseBody);
   }
 };
 
-module.exports = { signup, signin };
+module.exports = { signup, signin, resetPassword };
