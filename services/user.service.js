@@ -48,4 +48,41 @@ const getUserById = async (id) => {
     throw error;
   }
 };
-module.exports = { createUser, getUserByEmail, getUserById };
+const updateUserRoleorStatus = async (data, userId) => {
+  try {
+    let updateQuery = {};
+    if (data.userRole) {
+      updateQuery.userRole = data.userRole;
+    }
+    if (data.userStatus) {
+      updateQuery.userStatus = data.userStatus;
+    }
+
+    const response = await User.findOneAndUpdate(
+      {
+        _id: userId,
+      },
+      updateQuery,
+      { new: true, runValidators: true },
+    );
+
+    if (!response) {
+      throw { err: "User with the given ID does not exist", code: 404 };
+    }
+    return response;
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      let err = {};
+      Object.keys(error.errors).forEach((key) => {
+        err[key] = error.errors[key].message;
+      });
+    }
+    throw error;
+  }
+};
+module.exports = {
+  createUser,
+  getUserByEmail,
+  getUserById,
+  updateUserRoleorStatus,
+};
