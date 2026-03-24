@@ -27,7 +27,7 @@ const signin = async (req, res) => {
       throw { err: "Invalid password", code: 401 };
     }
     const token = jwt.sign(
-      { id: user.id, email: user.email },
+      { id: user._id, email: user.email },
       process.env.AUTH_KEY,
       { expiresIn: "1h" },
     );

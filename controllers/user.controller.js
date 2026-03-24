@@ -24,7 +24,7 @@ const update = async (req, res) => {
     }
 
     errorResponseBody.err = error.message;
-    res.status(500).json(errorResponseBody(error.message));
+    res.status(500).json(errorResponseBody);
   }
 };
 module.exports = { update };

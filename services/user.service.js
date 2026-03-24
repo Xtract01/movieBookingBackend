@@ -58,13 +58,10 @@ const updateUserRoleorStatus = async (data, userId) => {
       updateQuery.userStatus = data.userStatus;
     }
 
-    const response = await User.findOneAndUpdate(
-      {
-        _id: userId,
-      },
-      updateQuery,
-      { new: true, runValidators: true },
-    );
+    const response = await User.findByIdAndUpdate(userId, updateQuery, {
+      new: true,
+      runValidators: true,
+    });
 
     if (!response) {
       throw { err: "User with the given ID does not exist", code: 404 };

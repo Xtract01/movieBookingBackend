@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { errorResponseBody } = require("../utils/responseBody");
 const userService = require("../services/user.service");
+const { USER_ROLE } = require("../utils/constants");
 const validateSignUpRequest = async (req, res, next) => {
   if (!req.body.name) {
     errorResponseBody.err = "Name is required";
@@ -44,7 +45,7 @@ const isAuthenticated = async (req, res, next) => {
       errorResponseBody.err = "User not found";
       return res.status(404).json(errorResponseBody);
     }
-    req.user = user.id;
+    req.user = user._id;
     next();
   } catch (error) {
     if (error.name === "JsonWebTokenError") {
@@ -60,8 +61,47 @@ const isAuthenticated = async (req, res, next) => {
     return res.status(401).json(errorResponseBody);
   }
 };
+const validateResetPasswordRequest = async (req, res, next) => {
+  if (!req.body.oldPassword) {
+    errorResponseBody.err = "Old password is required";
+    return res.status(400).json(errorResponseBody);
+  }
+  if (!req.body.newPassword) {
+    errorResponseBody.err = "New password is required";
+    return res.status(400).json(errorResponseBody);
+  }
+  next();
+};
+const isAdmin = async (req, res, next) => {
+  const user = await userService.getUserById(req.user);
+  if (user.userRole != USER_ROLE.admin) {
+    errorResponseBody.err = "Admin access required";
+    return res.status(403).json(errorResponseBody);
+  }
+  next();
+};
+const isClient = async (req, res, next) => {
+  const user = await userService.getUserById(req.user);
+  if (user.userRole != USER_ROLE.client) {
+    errorResponseBody.err = "Client access required";
+    return res.status(403).json(errorResponseBody);
+  }
+  next();
+};
+const isAdminOrClient = async (req, res, next) => {
+  const user = await userService.getUserById(req.user);
+  if (user.userRole != USER_ROLE.client && user.userRole != USER_ROLE.admin) {
+    errorResponseBody.err = "User is neither admin nor client";
+    return res.status(403).json(errorResponseBody);
+  }
+  next();
+};
 module.exports = {
   validateSignUpRequest,
   validateSignInRequest,
   isAuthenticated,
+  validateResetPasswordRequest,
+  isAdmin,
+  isClient,
+  isAdminOrClient,
 };
