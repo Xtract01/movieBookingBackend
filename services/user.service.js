@@ -1,12 +1,12 @@
 const User = require("../models/user.model");
-const { USER_ROLE, USER_STATUS } = require("../utils/constants");
+const { USER_ROLE, USER_STATUS, STATUS } = require("../utils/constants");
 const createUser = async (data) => {
   try {
     if (!data.userRole || data.userRole === USER_ROLE.customer) {
       if (data.userStatus && data.userStatus != USER_STATUS.approved) {
         throw {
           err: "We cannot set any status other than APPROVED for a CUSTOMER",
-          code: 400,
+          code: STATUS.BAD_REQUEST,
         };
       }
     }
@@ -21,7 +21,7 @@ const createUser = async (data) => {
       Object.keys(error.errors).forEach((key) => {
         err[key] = error.errors[key].message;
       });
-      throw { err, code: 400 };
+      throw { err, code: STATUS.BAD_REQUEST };
     }
     throw error;
   }
@@ -30,7 +30,10 @@ const getUserByEmail = async (email) => {
   try {
     const response = await User.findOne({ email: email });
     if (!response) {
-      throw { err: "User with the given email does not exist", code: 404 };
+      throw {
+        err: "User with the given email does not exist",
+        code: STATUS.NOT_FOUND,
+      };
     }
     return response;
   } catch (error) {
@@ -41,7 +44,10 @@ const getUserById = async (id) => {
   try {
     const response = await User.findById(id);
     if (!response) {
-      throw { err: "User with the given ID does not exist", code: 404 };
+      throw {
+        err: "User with the given ID does not exist",
+        code: STATUS.NOT_FOUND,
+      };
     }
     return response;
   } catch (error) {
@@ -64,7 +70,10 @@ const updateUserRoleorStatus = async (data, userId) => {
     });
 
     if (!response) {
-      throw { err: "User with the given ID does not exist", code: 404 };
+      throw {
+        err: "User with the given ID does not exist",
+        code: STATUS.NOT_FOUND,
+      };
     }
     return response;
   } catch (error) {

@@ -3,6 +3,7 @@ const {
   errorResponseBody,
   successResponseBody,
 } = require("../utils/responseBody");
+const { STATUS } = require("../utils/constants");
 const update = async (req, res) => {
   try {
     const response = await userService.updateUserRoleorStatus(
@@ -12,11 +13,11 @@ const update = async (req, res) => {
 
     if (!response) {
       errorResponseBody.err = "User with the given ID does not exist";
-      return res.status(404).json(errorResponseBody);
+      return res.status(STATUS.NOT_FOUND).json(errorResponseBody);
     }
     successResponseBody.data = response;
     successResponseBody.message = "User updated successfully";
-    return res.status(200).json(successResponseBody);
+    return res.status(STATUS.OK).json(successResponseBody);
   } catch (error) {
     if (error.err) {
       errorResponseBody.err = error.err;
@@ -24,7 +25,7 @@ const update = async (req, res) => {
     }
 
     errorResponseBody.err = error.message;
-    res.status(500).json(errorResponseBody);
+    res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
   }
 };
 module.exports = { update };
