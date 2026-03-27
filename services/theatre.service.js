@@ -1,5 +1,6 @@
 const Theatre = require("../models/theatre.model");
 const Movie = require("../models/movie.model");
+const { STATUS } = require("../utils/constants");
 
 const createTheatre = async (data) => {
   try {
@@ -11,7 +12,7 @@ const createTheatre = async (data) => {
       Object.keys(err.errors).forEach((key) => {
         error[key] = err.errors[key].message;
       });
-      return { err: error, code: 400 };
+      throw { err: error, code: STATUS.UNPROCESSABLE_ENTITY };
     }
     throw err;
   }
@@ -21,7 +22,7 @@ const deleteTheatre = async (id) => {
   try {
     const response = await Theatre.findByIdAndDelete(id);
     if (!response) {
-      return { err: "Theatre not found", code: 404 };
+      throw { err: "Theatre not found", code: STATUS.NOT_FOUND };
     }
     return response;
   } catch (err) {
@@ -33,7 +34,7 @@ const getTheatre = async (id) => {
   try {
     const response = await Theatre.findById(id);
     if (!response) {
-      return { err: "Theatre not found", code: 404 };
+      throw { err: "Theatre not found", code: STATUS.NOT_FOUND };
     }
     return response;
   } catch (err) {
