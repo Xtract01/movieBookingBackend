@@ -18,4 +18,14 @@ const STATUS_CODE = {
   FORBIDDEN: 403,
   UNPROCESSABLE_ENTITY: 422,
 };
-module.exports = { USER_STATUS, USER_ROLE, STATUS: STATUS_CODE };
+const BOOKING_STATUS = {
+  cancelled: "CANCELLED",
+  processing: "IN_PROCESS",
+  successfull: "SUCCESSFULL",
+};
+module.exports = {
+  USER_STATUS,
+  USER_ROLE,
+  STATUS: STATUS_CODE,
+  BOOKING_STATUS,
+};
