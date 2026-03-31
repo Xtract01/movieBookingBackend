@@ -1,7 +1,8 @@
-const { STATUS } = require("../utils/constants");
+const { STATUS, USER_ROLE, BOOKING_STATUS } = require("../utils/constants");
 const { errorResponseBody } = require("../utils/responseBody");
 const theatreService = require("../services/theatre.service");
 const ObjectId = require("mongoose").Types.ObjectId;
+const userService = require("../services/user.service");
 const validateBookingCreateRequest = async (req, res, next) => {
   if (!req.body.theatreId) {
     errorResponseBody.message = "theatreId is required";
@@ -39,4 +40,16 @@ const validateBookingCreateRequest = async (req, res, next) => {
   }
   next();
 };
-module.exports = { validateBookingCreateRequest };
+const canChangeStatus = async (req, res, next) => {
+  const user = await userService.getUserById(req.user);
+  if (
+    user.userRole == USER_ROLE.customer &&
+    req.body.status &&
+    req.body.status != BOOKING_STATUS.cancelled
+  ) {
+    errorResponseBody.err = "Only admin can change the booking status";
+    return res.status(STATUS.FORBIDDEN).json(errorResponseBody);
+  }
+  next();
+};
+module.exports = { validateBookingCreateRequest, canChangeStatus };
