@@ -38,4 +38,23 @@ const updateBooking = async (data, bookingId) => {
     throw error;
   }
 };
-module.exports = { createBooking, updateBooking };
+const getBookings = async (data) => {
+  try {
+    const response = await Booking.find({
+      userId: data.userId,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+const getAllBookings = async () => {
+  try {
+    const response = await Booking.find({});
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports = { createBooking, updateBooking, getBookings, getAllBookings };

@@ -41,8 +41,40 @@ const update = async (req, res) => {
     return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
   }
 };
+const getBookings = async (req, res) => {
+  try {
+    const response = await bookingService.getBookings({ userId: req.user });
+    successResponseBody.message = "Bookings fetched successfully";
+    successResponseBody.data = response;
+    return res.status(STATUS.OK).json(successResponseBody);
+  } catch (error) {
+    if (error.err) {
+      errorResponseBody.err = error.err;
+      return res.status(error.code).json(errorResponseBody);
+    }
+    errorResponseBody.message = error.message;
+    return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
+  }
+};
+const getAllBookings = async (req, res) => {
+  try {
+    const response = await bookingService.getAllBookings();
+    successResponseBody.message = "All bookings fetched successfully";
+    successResponseBody.data = response;
+    return res.status(STATUS.OK).json(successResponseBody);
+  } catch (error) {
+    if (error.err) {
+      errorResponseBody.err = error.err;
+      return res.status(error.code).json(errorResponseBody);
+    }
+    errorResponseBody.message = error.message;
+    return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
+  }
+};
 
 module.exports = {
   create,
   update,
+  getBookings,
+  getAllBookings,
 };
