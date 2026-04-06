@@ -36,6 +36,7 @@ const isAuthenticated = async (req, res, next) => {
       return res.status(STATUS.FORBIDDEN).json(errorResponseBody);
     }
     const response = jwt.verify(token, process.env.AUTH_KEY);
+
     if (!response) {
       errorResponseBody.err = "Invalid token";
       return res.status(STATUS.UNAUTHORIZED).json(errorResponseBody);

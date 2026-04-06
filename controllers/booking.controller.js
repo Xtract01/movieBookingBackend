@@ -71,10 +71,29 @@ const getAllBookings = async (req, res) => {
     return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
   }
 };
+const getBookingById = async (req, res) => {
+  try {
+    const response = await bookingService.getBookingById(
+      req.params.id,
+      req.user,
+    );
+    successResponseBody.message = "Booking fetched successfully";
+    successResponseBody.data = response;
+    return res.status(STATUS.OK).json(successResponseBody);
+  } catch (error) {
+    if (error.error) {
+      errorResponseBody.err = error.err;
+      return res.status(error.code).json(errorResponseBody);
+    }
+    errorResponseBody.message = error.message;
+    return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
+  }
+};
 
 module.exports = {
   create,
   update,
   getBookings,
   getAllBookings,
+  getBookingById,
 };
