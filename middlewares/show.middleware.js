@@ -33,4 +33,13 @@ const validateCreateShowRequest = async (req, res, next) => {
   }
   next();
 };
-module.exports = { validateCreateShowRequest };
+
+const validateShowUpdateRequest = async (req, res, next) => {
+  if (req.body.theatreId && !ObjectId.isValid(req.body.theatreId)) {
+    errorResponseBody.err = "Invalid Theatre ID";
+    return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
+  }
+
+  next();
+};
+module.exports = { validateCreateShowRequest, validateShowUpdateRequest };
