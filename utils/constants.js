@@ -1,3 +1,5 @@
+const e = require("express");
+
 const USER_STATUS = {
   approved: "APPROVED",
   pending: "PENDING",
@@ -22,6 +24,7 @@ const BOOKING_STATUS = {
   cancelled: "CANCELLED",
   processing: "IN_PROCESS",
   successfull: "SUCCESSFULL",
+  expired: "EXPIRED",
 };
 const PAYMENT_STATUS = {
   success: "SUCCESS",

@@ -9,6 +9,7 @@ const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");
 const bookingRoutes = require("./routes/booking.route");
 const showRoutes = require("./routes/show.routes");
+const paymentRoutes = require("./routes/payment.routes");
 
 env.config();
 const app = express();
@@ -21,6 +22,7 @@ theatreRoutes(app);
 userRoutes(app);
 bookingRoutes(app);
 showRoutes(app);
+paymentRoutes(app);
 
 app.listen(process.env.PORT, async () => {
   console.log(`Server is running on port ${process.env.PORT}`);
